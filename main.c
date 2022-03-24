@@ -25,9 +25,9 @@ void btn_handler(void *arg) {
     (void) arg;
     msg_t msg;
     if (!gpio_read(GPIO_PIN(PORT_C, 13)))
-        msg.content.value = 2;
+        msg.content.value = 0;
     else 
-    	msg.content.value = 3;
+    	msg.content.value = 1;
     msg_send(&msg, thread_flashing);
     return;
 }
@@ -37,9 +37,9 @@ void* flashing_thread(void* arg) {
     while (1) {
         msg_t msg;
         msg_receive(&msg);
-        if (msg.content.value == 2)
+        if (msg.content.value == 0)
 		    button_down = xtimer_now();
-		if (msg.content.value == 3) {
+	if (msg.content.value == 1) {
 		    button_up = xtimer_now();
 		    duration_button_us = xtimer_usec_from_ticks(xtimer_diff(button_up, button_down));   
 		    if (duration_button_us < 500000) {
